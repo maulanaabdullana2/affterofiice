@@ -23,9 +23,10 @@ var URLs = []string{
 }
 
 func main() {
+	//defer punya  internal stack
 	defer fmt.Println("main thread end")
 	defer func() {
-		fmt.Println("defer")
+		// fmt.Println("defer")
 	}()
 	fmt.Println("main thread start")
 
@@ -36,7 +37,7 @@ func main() {
 
 	// fetchSequentially()
 	// fmt.Println("")
-	// fetchConcurrently()
+	fetchConcurrently()
 }
 
 func basicGoroutine() {
@@ -62,8 +63,10 @@ func basicChan() {
 		messageChan <- "tes" // pass "tes" to messageChan
 	}()
 	msg := <-messageChan // output 1 data from messageChan // BLOCKING
-	fmt.Println(msg)
+	fmt.Println("msg", msg)
+	// return
 	// msg = <-messageChan // Blocking main goroutine, waiting for new data from messageChan
+	// return
 
 	/* BUFFERED CHANNEL */
 	bufferedMessageChan := make(chan string, 2)
@@ -82,6 +85,8 @@ func basicChan() {
 		fmt.Println("received", str)
 		// time.Sleep(time.Second)
 	}
+
+	// return
 
 	/* CHANNEL DIRECTION in func */
 	chPertama := make(chan int, 1)
@@ -222,6 +227,7 @@ func fetchConcurrentlyWaitgroup() {
 	// Collect results from the channel for each URL
 	wg.Wait()
 
+	close(ch)
 	for msg := range ch { // iterate len(URLs) times without assign any new variable.
 		results = append(results, msg)
 	}
